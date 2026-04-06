@@ -6,17 +6,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.simpleandroidapp.data.network.RetrofitClient
+import com.example.simpleandroidapp.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
 
 class UserViewModel: ViewModel() {
+    private val userRepository = UserRepository(RetrofitClient.userService)
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> get() = _users
 
     fun fetchUsers() {
         viewModelScope.launch {
             try{
-                val usersResponse = RetrofitClient.instanceUser.getAllUsers()
+                val usersResponse = userRepository.getAllUsers()
                 _users.value = usersResponse
             } catch(e: Exception){
                 println("An error occurred: ${e.message}")

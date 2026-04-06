@@ -6,10 +6,13 @@ import com.example.simpleandroidapp.data.model.Post
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.simpleandroidapp.data.network.RetrofitClient
+import com.example.simpleandroidapp.data.repository.PostRepository
 import kotlinx.coroutines.launch
 
 
 class MainViewModel: ViewModel() {
+
+    private val postRepository = PostRepository(RetrofitClient.postService)
 
     /*
     * _posts is for getting data from API
@@ -21,7 +24,7 @@ class MainViewModel: ViewModel() {
     fun fetchPosts() {
         viewModelScope.launch {
             try {
-                val postsResponse = RetrofitClient.instance.getAllPosts()
+                val postsResponse = postRepository.getPosts()
                 _posts.value = postsResponse
             } catch(e: Exception) {
                 println("An error occurred: ${e.message}")
